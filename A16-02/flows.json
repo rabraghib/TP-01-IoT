@@ -1,0 +1,273 @@
+[
+    {
+        "id": "04bfbfb1ea05850f",
+        "type": "tab",
+        "label": "A16-02",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "mqtt_in_sensors",
+        "type": "mqtt in",
+        "z": "04bfbfb1ea05850f",
+        "name": "Sensor Data",
+        "topic": "IOT-G9/blinds/sensors",
+        "qos": "0",
+        "datatype": "json",
+        "broker": "d7ff51bb199e8781",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 410,
+        "y": 220,
+        "wires": [
+            [
+                "ui_gauge_temp",
+                "ui_gauge_light",
+                "func_auto_logic"
+            ]
+        ]
+    },
+    {
+        "id": "ui_gauge_temp",
+        "type": "ui_gauge",
+        "z": "04bfbfb1ea05850f",
+        "name": "",
+        "group": "ui_group_sensors",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Room Temp",
+        "label": "°C",
+        "format": "{{msg.payload.temp}}",
+        "min": 0,
+        "max": "50",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "x": 670,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "ui_gauge_light",
+        "type": "ui_gauge",
+        "z": "04bfbfb1ea05850f",
+        "name": "",
+        "group": "ui_group_sensors",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Sun Intensity",
+        "label": "lux",
+        "format": "{{msg.payload.light}}",
+        "min": 0,
+        "max": "1024",
+        "colors": [
+            "#4a4a4a",
+            "#e6e600",
+            "#ff8000"
+        ],
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ui_switch_mode",
+        "type": "ui_switch",
+        "z": "04bfbfb1ea05850f",
+        "name": "",
+        "label": "Auto Mode",
+        "tooltip": "",
+        "group": "ui_group_controls",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "mode",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "auto",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "manual",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "x": 430,
+        "y": 360,
+        "wires": [
+            [
+                "func_save_mode"
+            ]
+        ]
+    },
+    {
+        "id": "func_save_mode",
+        "type": "function",
+        "z": "04bfbfb1ea05850f",
+        "name": "Save Mode State",
+        "func": "global.set(\"blind_mode\", msg.payload);\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 650,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "func_auto_logic",
+        "type": "function",
+        "z": "04bfbfb1ea05850f",
+        "name": "The Auto Brain",
+        "func": "let mode = global.get(\"blind_mode\") || \"manual\";\nlet temp = msg.payload.temp;\nlet light = msg.payload.light;\nlet angle = 90;\n\nif (mode === \"auto\") {\n    if (temp >= 26 && light > 600) {\n        // Too hot and sunny -> Close blinds\n        angle = 0;\n    } else if (temp < 20 && light > 400) {\n        // Cold but sunny -> Open to heat room\n        angle = 180;\n    } else {\n        // Neutral -> Half open\n        angle = 90;\n    }\n    return { payload: angle };\n}\nreturn null; // Do nothing if manual",
+        "outputs": 1,
+        "x": 640,
+        "y": 280,
+        "wires": [
+            [
+                "mqtt_out_blinds"
+            ]
+        ]
+    },
+    {
+        "id": "ui_slider_manual",
+        "type": "ui_slider",
+        "z": "04bfbfb1ea05850f",
+        "name": "",
+        "label": "Angle Override",
+        "tooltip": "",
+        "group": "ui_group_controls",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "end",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": "180",
+        "step": 1,
+        "className": "",
+        "x": 440,
+        "y": 420,
+        "wires": [
+            [
+                "func_manual_check"
+            ]
+        ]
+    },
+    {
+        "id": "func_manual_check",
+        "type": "function",
+        "z": "04bfbfb1ea05850f",
+        "name": "Check if Manual",
+        "func": "let mode = global.get(\"blind_mode\") || \"manual\";\nif (mode === \"manual\") {\n    return msg;\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 680,
+        "y": 420,
+        "wires": [
+            [
+                "mqtt_out_blinds"
+            ]
+        ]
+    },
+    {
+        "id": "mqtt_out_blinds",
+        "type": "mqtt out",
+        "z": "04bfbfb1ea05850f",
+        "name": "Send Angle Command",
+        "topic": "IOT-G9/blinds/control",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7ff51bb199e8781",
+        "x": 940,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d7ff51bb199e8781",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "ui_group_sensors",
+        "type": "ui_group",
+        "name": "Environment",
+        "tab": "ui_tab_blinds",
+        "order": 1,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "ui_group_controls",
+        "type": "ui_group",
+        "name": "Blind Controls",
+        "tab": "ui_tab_blinds",
+        "order": 2,
+        "disp": true,
+        "width": "6"
+    },
+    {
+        "id": "ui_tab_blinds",
+        "type": "ui_tab",
+        "name": "Smart Window",
+        "icon": "dashboard"
+    },
+    {
+        "id": "f9d66e0eb415d3b0",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]

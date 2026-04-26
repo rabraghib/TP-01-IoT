@@ -1,0 +1,216 @@
+[
+    {
+        "id": "e11125e4f6285331",
+        "type": "tab",
+        "label": "A16-01",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "cdd454cfb3d9fee5",
+        "type": "mqtt in",
+        "z": "e11125e4f6285331",
+        "name": "Temp In",
+        "topic": "IOT-G9/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "d7ff51bb199e8781",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 590,
+        "y": 200,
+        "wires": [
+            [
+                "b6a0112f6362c623"
+            ]
+        ]
+    },
+    {
+        "id": "ae026c7fde0fd681",
+        "type": "mqtt in",
+        "z": "e11125e4f6285331",
+        "name": "Hum In",
+        "topic": "IOT-G9/hum",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "d7ff51bb199e8781",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 590,
+        "y": 260,
+        "wires": [
+            [
+                "11564e2c4dcea705"
+            ]
+        ]
+    },
+    {
+        "id": "b6a0112f6362c623",
+        "type": "ui_gauge",
+        "z": "e11125e4f6285331",
+        "name": "",
+        "group": "b771bba6baab242a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Temperature",
+        "label": "°C",
+        "format": "{{value}}",
+        "min": "-40",
+        "max": "80",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 810,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "11564e2c4dcea705",
+        "type": "ui_gauge",
+        "z": "e11125e4f6285331",
+        "name": "",
+        "group": "b771bba6baab242a",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Humidity",
+        "label": "%",
+        "format": "{{value}}",
+        "min": 0,
+        "max": "100",
+        "colors": [
+            "#0080ff",
+            "#00b500",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 800,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "e646ba2c4c7faf22",
+        "type": "ui_switch",
+        "z": "e11125e4f6285331",
+        "name": "",
+        "label": "LED Toggle",
+        "tooltip": "",
+        "group": "b771bba6baab242a",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "e36de44babdb78d4"
+            ]
+        ]
+    },
+    {
+        "id": "e36de44babdb78d4",
+        "type": "mqtt out",
+        "z": "e11125e4f6285331",
+        "name": "LED Out",
+        "topic": "IOT-G9/led",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7ff51bb199e8781",
+        "x": 800,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d7ff51bb199e8781",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b771bba6baab242a",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "9f47c2ea693bdbc7",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9f47c2ea693bdbc7",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "7022b0b1d002140a",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
