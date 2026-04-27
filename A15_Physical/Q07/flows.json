@@ -1,0 +1,233 @@
+[
+    {
+        "id": "7749d40823c2caa9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e755ecdb37804694",
+        "type": "mqtt in",
+        "z": "7749d40823c2caa9",
+        "name": "",
+        "topic": "IOT-G9/water",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "d7ff51bb199e8781",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 310,
+        "y": 200,
+        "wires": [
+            [
+                "d2df61292edc0817"
+            ]
+        ]
+    },
+    {
+        "id": "1924f6bf117babca",
+        "type": "ui_gauge",
+        "z": "7749d40823c2caa9",
+        "name": "",
+        "group": "b771bba6baab242a",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "Water Level",
+        "label": "mm",
+        "format": "{{value}}",
+        "min": "0",
+        "max": "30",
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 650,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "473a9aedb403c5f2",
+        "type": "ui_switch",
+        "z": "7749d40823c2caa9",
+        "name": "",
+        "label": "LED Toggle",
+        "tooltip": "",
+        "group": "b771bba6baab242a",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "on",
+        "onvalueType": "str",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "off",
+        "offvalueType": "str",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 450,
+        "y": 340,
+        "wires": [
+            [
+                "328bb6271ff7bb57"
+            ]
+        ]
+    },
+    {
+        "id": "328bb6271ff7bb57",
+        "type": "mqtt out",
+        "z": "7749d40823c2caa9",
+        "name": "LED Out",
+        "topic": "IOT-G9/led",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "d7ff51bb199e8781",
+        "x": 640,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "d2df61292edc0817",
+        "type": "function",
+        "z": "7749d40823c2caa9",
+        "name": "map to mm",
+        "func": "msg.payload = (30 * msg.payload / 1024).toFixed(2);\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 200,
+        "wires": [
+            [
+                "1924f6bf117babca",
+                "5df8835fe7ba1bcd"
+            ]
+        ]
+    },
+    {
+        "id": "5df8835fe7ba1bcd",
+        "type": "ui_chart",
+        "z": "7749d40823c2caa9",
+        "name": "",
+        "group": "b771bba6baab242a",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "30",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 650,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d7ff51bb199e8781",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "b771bba6baab242a",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "9f47c2ea693bdbc7",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9f47c2ea693bdbc7",
+        "type": "ui_tab",
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "4695827772b3251b",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6"
+        }
+    }
+]
